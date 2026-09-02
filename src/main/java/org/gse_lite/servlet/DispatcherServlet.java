@@ -73,11 +73,15 @@ public class DispatcherServlet extends HttpServlet {
         }
 
         try {
-            Object result = handlerMethod.invokeReflection();
+            Object result = handlerMethod.invokeReflection(
+                    request,
+                    response
+            );
 
-            if (result != null) {
-                response.setContentType("text/plain");
-                response.getWriter().write(result.toString());
+            if (result instanceof String viewName) {
+                request.getRequestDispatcher(
+                        "/WEB-INF/views/" + viewName + ".jsp"
+                ).forward(request, response);
             }
         }
         catch (ReflectiveOperationException e) {
