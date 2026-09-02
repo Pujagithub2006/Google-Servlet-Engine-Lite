@@ -79,55 +79,73 @@ color:#1976d2;
 
 <div class="feed">
 
-<%
-if(posts == null || posts.isEmpty()) {
-%>
-
-<p>No posts available!</p>
-
-<%
-}
-
-else {
-    for(Post post:posts) {
-%>
-
-<div class="card">
-
-<div class="author">
-
-<%=post.getAuthor()%>
-
+<div id="feed-container">
+    <jsp:include page="partials/post_item.jsp"/>
 </div>
 
-<p>
+<div id="scroll-trigger"></div>
 
-<%=post.getContent()%>
-
+<p id="end-message" style="display:none; text-align:center; color:gray; margin:20px;">
+    No more posts to load.
 </p>
 
-<div class="time">
-
-<%=post.getTimestamp()%>
-
 </div>
 
-<div class="likes">
+<script>
 
-&#10084; <%=post.getLikesCount()%>
+let currentPage = 1;
 
-</div>
+const feedContainer = document.getElementById("feed-container");
+const scrollTrigger = document.getElementById("scroll-trigger");
 
-</div>
+const observer = new IntersectionObserver(loadMore);
+observer.observe(scrollTrigger);
 
-<%
-    }
+function loadMore(entries) {
+    if(!entries[0].isIntersecting) return;
+    currentPage++;
+
+    fetch(
+        "/feed?page="+currentPage,
+        {
+            headers:{
+                "X-Requested-With":"XMLHttpRequest"
+            }
+        }
+    )
+
+    .then(response=>response.text())
+    .then(html=>{
+        if(html.trim() === "") {
+            document.getElementById("end-message").style.display = "block";
+
+            observer.disconnect();
+            return;
+        }
+
+        feedContainer.insertAdjacentHTML(
+            "beforeend",
+            html
+        );
+
+        bindEvents();
+
+        history.pushState(
+            {},
+            "",
+            "/feed?page="+currentPage
+        );
+    })
+    .catch(error => {
+        console.error("Failed to load more posts:", error);
+    });
 }
 
-%>
+function bindEvents() {
+    // Future implementation
+}
 
-
-</div>
+</script>
 
 </body>
 
