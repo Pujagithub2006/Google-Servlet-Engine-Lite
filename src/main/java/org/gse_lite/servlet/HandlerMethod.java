@@ -1,5 +1,8 @@
 package org.gse_lite.servlet;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -13,8 +16,17 @@ public class HandlerMethod {
         this.method = method;
     }
 
-    public Object invokeReflection() throws InvocationTargetException, IllegalAccessException {
-        return method.invoke(controller);
+    public Object invokeReflection(
+            HttpServletRequest request,
+            HttpServletResponse response
+    )
+            throws InvocationTargetException, IllegalAccessException {
+
+        return method.invoke(
+                controller,
+                request,
+                response
+        );
     }
 
     public Object getController() {

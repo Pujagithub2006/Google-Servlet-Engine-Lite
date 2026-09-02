@@ -7,17 +7,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import jakarta.servlet.ServletException;
-import java.io.IOException;
+import org.gse_lite.service.PostService;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 
 @Controller
 public class FeedController {
 
     @GetMapping("/feed")
-    public void showFeed(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintWriter respWriter = response.getWriter();
-        respWriter.println("Dispatching feed successful");
+    public String showFeed(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PostService service = new PostService();
+
+        request.setAttribute(
+                "posts",
+                service.getPaginated(1,10)
+        );
+
+        return "feed"; // ViewResolver config - /WEB-INF/views/feed.jsp
     }
 
 }
