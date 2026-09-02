@@ -18,12 +18,31 @@ public class FeedController {
     public String showFeed(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostService service = new PostService();
 
+        int page = 1;
+        String pageParam = request.getParameter("page");
+
+        if(pageParam != null) {
+            try{
+                page = Integer.parseInt(pageParam);
+            }
+            catch (NumberFormatException ignored){
+                page = 1;
+            }
+        }
+
         request.setAttribute(
                 "posts",
-                service.getPaginated(1,10)
+                service.getPaginated(page, 10)
         );
 
-        return "feed"; // ViewResolver config - /WEB-INF/views/feed.jsp
+        boolean ajaxRequest =
+                "XMLHttpRequest".equals(
+                    request.getHeader("X-Requested-With")
+                );
+
+        if(ajaxRequest) return "partials/post_item";
+        return "feed";
+
     }
 
 }
