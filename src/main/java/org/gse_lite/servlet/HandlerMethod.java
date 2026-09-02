@@ -16,17 +16,11 @@ public class HandlerMethod {
         this.method = method;
     }
 
-    public Object invokeReflection(
-            HttpServletRequest request,
-            HttpServletResponse response
-    )
+    public Object invokeReflection(HttpServletRequest request,
+                                   HttpServletResponse response)
             throws InvocationTargetException, IllegalAccessException {
 
-        return method.invoke(
-                controller,
-                request,
-                response
-        );
+        return method.invoke(controller, request, response);
     }
 
     public Object getController() {
