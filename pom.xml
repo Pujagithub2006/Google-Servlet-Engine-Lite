@@ -30,7 +30,10 @@
         </dependency>
     </dependencies>
 
+
     <build>
+        <finalName>gse-lite</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -51,4 +54,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
