@@ -1,3 +1,11 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="java.util.List" %>
+<%@ page import="org.gse_lite.model.Post" %>
+
+<%
+List<Post> posts = (List<Post>) request.getAttribute("posts");
+%>
+
 <%
 if(posts == null || posts.isEmpty()) {
 %>
