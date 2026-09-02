@@ -93,6 +93,7 @@ color:#1976d2;
 
 <script>
 
+const contextPath = "${pageContext.request.contextPath}";
 let currentPage = 1;
 
 const feedContainer = document.getElementById("feed-container");
@@ -106,7 +107,7 @@ function loadMore(entries) {
     currentPage++;
 
     fetch(
-        "/feed?page="+currentPage,
+        contextPath + "/feed?page=" + currentPage,
         {
             headers:{
                 "X-Requested-With":"XMLHttpRequest"
@@ -133,7 +134,7 @@ function loadMore(entries) {
         history.pushState(
             {},
             "",
-            "/feed?page="+currentPage
+            contextPath + "/feed?page=" + currentPage
         );
     })
     .catch(error => {

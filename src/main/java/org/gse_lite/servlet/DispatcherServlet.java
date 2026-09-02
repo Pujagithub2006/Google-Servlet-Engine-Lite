@@ -16,13 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@WebServlet("/")
 public class DispatcherServlet extends HttpServlet {
     private final Map<String, HandlerMethod> routeMap = new HashMap<>();
 
     @Override
     public void init() throws ServletException {
         // finding Controllers and mapping it against the urls
+        System.out.println("DispatcherServlet INIT");
 
         Set<Class<?>> controllerClasses;
         try {
@@ -63,7 +63,10 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String urlPath = request.getRequestURI();
+        System.out.println("DispatcherServlet DOGET");
+
+        String urlPath = request.getRequestURI()
+                .substring(request.getContextPath().length());
 
         HandlerMethod handlerMethod = routeMap.get(urlPath);
 
@@ -73,12 +76,12 @@ public class DispatcherServlet extends HttpServlet {
         }
 
         try {
-            Object result = handlerMethod.invokeReflection(
-                    request,
-                    response
-            );
+            Object result = handlerMethod.invokeReflection(request, response);
 
-            if (result instanceof String viewName) {
+            if (result != null) {
+
+                String viewName = result.toString();
+
                 request.getRequestDispatcher(
                         "/WEB-INF/views/" + viewName + ".jsp"
                 ).forward(request, response);
